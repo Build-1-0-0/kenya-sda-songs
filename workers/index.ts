@@ -1,4 +1,19 @@
-interface Song { id: string; title: string; youtubeId: string; description: string; lyrics: string; thumbnail: string; category: string; date: string; }
+interface Song {
+  id: string;
+  title: string;
+  youtubeId: string;
+  description: string;
+  lyrics: string;
+  thumbnail: string;
+  category: string;
+  date: string;
+}
+
+interface Env {
+  SONGS: KVNamespace;
+  EDITOR_PASSWORD: string;
+}
+
 export default {
   async fetch(request: Request, env: Env) {
     const url = new URL(request.url);
@@ -24,4 +39,4 @@ export default {
     }
     return new Response('Not Found', { status: 404 });
   },
-} as ExportedHandler<Env>;
+} satisfies ExportedHandler<Env>;
