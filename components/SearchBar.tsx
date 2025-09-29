@@ -2,7 +2,22 @@ import { useState } from 'react';
 import Fuse from 'fuse.js';
 import SongCard from './SongCard';
 
-export default function SearchBar({ songs }) {
+interface Song {
+  id: string;
+  title: string;
+  youtubeId: string;
+  description: string;
+  lyrics: string;
+  thumbnail: string;
+  category: string;
+  date: string;
+}
+
+interface SearchBarProps {
+  songs: Song[];
+}
+
+export default function SearchBar({ songs }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const fuse = new Fuse(songs, { keys: ['title', 'description', 'lyrics'] });
   const results = query ? fuse.search(query).map(r => r.item) : songs;
