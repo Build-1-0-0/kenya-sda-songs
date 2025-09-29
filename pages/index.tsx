@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
+import SongCard from '../components/SongCard';
 
 interface Song {
   id: string;
@@ -25,7 +26,7 @@ export default function Home() {
       <SearchBar songs={songs} />
       <div className="grid grid-cols-2 gap-4">
         {songs.map(song => (
-          <SearchBar songs={[song]} key={song.id} />
+          <SongCard key={song.id} song={song} />
         ))}
       </div>
     </div>
