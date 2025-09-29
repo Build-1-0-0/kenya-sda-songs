@@ -1,3 +1,5 @@
+import { KVNamespace } from '@cloudflare/workers-types';
+
 interface Song {
   id: string;
   title: string;
