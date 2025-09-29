@@ -17,7 +17,7 @@ export default function BlogPost() {
             };
             (function() {
               var d = document, s = d.createElement('script');
-              s.src = 'https://your-site.disqus.com/embed.js';
+              s.src = 'https://kenya-sda-songs.disqus.com/embed.js';
               s.setAttribute('data-timestamp', +new Date());
               d.body.appendChild(s);
             })();
