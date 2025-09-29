@@ -1,0 +1,7 @@
+name = "sda-api"
+compatibility_date = "2025-09-29"
+main = "index.ts"
+
+[[kv_namespaces]]
+binding = "SONGS"
+id = "049b664d5f794710835a904b9e50c8e7"
