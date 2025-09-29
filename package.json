@@ -14,5 +14,10 @@
     "fuse.js": "latest",
     "@cloudflare/workers-types": "latest",
     "tailwindcss": "latest"
+  },
+  "devDependencies": {
+    "typescript": "latest",
+    "@types/react": "latest",
+    "@types/node": "latest"
   }
 }
