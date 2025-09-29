@@ -1,4 +1,4 @@
-import { KVNamespace, ExportedHandler } from '@cloudflare/workers-types';
+import { KVNamespace, ExportedHandler, Request, Response } from '@cloudflare/workers-types';
 
 interface Song {
   id: string;
@@ -17,7 +17,7 @@ interface Env {
 }
 
 export default {
-  async fetch(request: Request, env: Env) {
+  async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
     // List all songs
     if (url.pathname === '/api/songs' && request.method === 'GET') {
