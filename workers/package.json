@@ -1,0 +1,13 @@
+{
+  "name": "sda-api",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.ts",
+  "dependencies": {
+    "@cloudflare/workers-types": "^4.20230518.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}
