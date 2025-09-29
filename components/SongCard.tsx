@@ -1,6 +1,21 @@
 import YouTube from 'react-youtube';
 
-export default function SongCard({ song }) {
+interface Song {
+  id: string;
+  title: string;
+  youtubeId: string;
+  description: string;
+  lyrics: string;
+  thumbnail: string;
+  category: string;
+  date: string;
+}
+
+interface SongCardProps {
+  song: Song;
+}
+
+export default function SongCard({ song }: SongCardProps) {
   return (
     <div className="border rounded-lg p-4">
       <img src={song.thumbnail} alt={song.title} className="w-full h-32 object-cover rounded" />
