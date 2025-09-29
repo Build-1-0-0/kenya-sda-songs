@@ -15,7 +15,10 @@
     "react-youtube": "latest",
     "fuse.js": "latest",
     "@cloudflare/workers-types": "latest",
-    "tailwindcss": "latest"
+    "tailwindcss": "latest",
+    "@cloudflare/next-on-pages": "latest",
+    "@cloudflare/pages": "latest"
+    
   },
   "devDependencies": {
     "typescript": "latest",
