@@ -1,4 +1,4 @@
-import { KVNamespace } from '@cloudflare/workers-types';
+import { KVNamespace, ExportedHandler } from '@cloudflare/workers-types';
 
 interface Song {
   id: string;
