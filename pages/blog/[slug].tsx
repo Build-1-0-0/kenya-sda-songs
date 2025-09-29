@@ -8,17 +8,22 @@ export default function BlogPost() {
       <h1 className="text-2xl font-bold">Blog Post: {slug}</h1>
       <p>Sample content for {slug}...</p>
       <div id="disqus_thread"></div>
-      <script>
-        var disqus_config = function () {
-          this.page.url = window.location.href;
-          this.page.identifier = `blog-${slug}`;
-        };
-        (function() {
-          var d = document, s = d.createElement('script');
-          s.src = 'https://your-site.disqus.com/embed.js';
-          d.body.appendChild(s);
-        })();
-      </script>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `
+            var disqus_config = function(this: { page: { url: string; identifier: string } }) {
+              this.page.url = window.location.href;
+              this.page.identifier = 'blog-${slug}';
+            };
+            (function() {
+              var d = document, s = d.createElement('script');
+              s.src = 'https://your-site.disqus.com/embed.js';
+              s.setAttribute('data-timestamp', +new Date());
+              d.body.appendChild(s);
+            })();
+          `,
+        }}
+      />
     </div>
   );
 }
