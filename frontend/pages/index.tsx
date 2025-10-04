@@ -19,12 +19,12 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('https://sda-api.africancontent807.workers.dev/api/songs')
+    fetch('/api/songs')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch songs');
         return res.json();
       })
-      .then(data => {
+      .then((data: Song[]) => {
         setSongs(data);
         setLoading(false);
       })
