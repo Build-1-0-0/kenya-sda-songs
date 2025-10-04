@@ -16,8 +16,9 @@
     "fuse.js": "latest",
     "@cloudflare/workers-types": "latest",
     "tailwindcss": "latest",
-    "@cloudflare/next-on-pages": "latest"
-    
+    "@cloudflare/next-on-pages": "latest",
+    "postcss":"latest",
+    "autoprefixer":"latest"
   },
   "devDependencies": {
     "typescript": "latest",
