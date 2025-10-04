@@ -20,22 +20,24 @@ export default function Lyrics() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-  const fetchSongs = async () => {
-    try {
-      const res = await fetch('https://sda-api.africancontent807.workers.dev/api/songs');
-      if (!res.ok) throw new Error('Failed to fetch songs');
-      const data: Song[] = await res.json();
-      setSongs(data);
-    } catch (err: any) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+    if (id) {
+      const fetchSong = async () => {
+        try {
+          const res = await fetch(`/api/songs/${id}`);
+          if (!res.ok) throw new Error('Failed to fetch song');
+          const data: Song = await res.json(); // 👈 Type assertion for single Song
+          setSong(data); // 👈 Fixed: setSong instead of setSongs
+        } catch (err: any) {
+          setError(err.message);
+        } finally {
+          setLoading(false);
+        }
+      };
 
-  fetchSongs();
-}, []);
-  
+      fetchSong();
+    }
+  }, [id]);
+
   if (loading) return <div className="container mx-auto p-4">Loading song...</div>;
   if (error) return <div className="container mx-auto p-4">Error: {error}</div>;
   if (!song) return <div className="container mx-auto p-4">Song not found</div>;
