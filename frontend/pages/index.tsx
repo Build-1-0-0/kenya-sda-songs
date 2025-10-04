@@ -19,7 +19,7 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/songs')
+    fetch('https://sda-api.africancontent807.workers.dev/api/songs')
       .then(res => {
         if (!res.ok) throw new Error('Failed to fetch songs');
         return res.json();
@@ -34,7 +34,7 @@ export default function Home() {
       });
   }, []);
 
-  if (loading) return <div className="container mx-auto p-4">Loading...</div>;
+  if (loading) return <div className="container mx-auto p-4">Loading songs...</div>;
   if (error) return <div className="container mx-auto p-4">Error: {error}</div>;
 
   return (
@@ -42,7 +42,7 @@ export default function Home() {
       <h1 className="text-3xl font-bold mb-4">Kenyan SDA Songs</h1>
       <SearchBar songs={songs} />
       {songs.length === 0 ? (
-        <p>No songs available. Add some in the editor!</p>
+        <p className="text-center text-gray-500">No songs available. Add some in the <a href="/edit" className="text-blue-500 underline">editor</a>!</p>
       ) : (
         <div className="grid grid-cols-2 gap-4">
           {songs.map(song => (
