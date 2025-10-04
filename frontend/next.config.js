@@ -1,5 +1,3 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  telemetry: false,
-};
+const nextConfig = {};
 module.exports = nextConfig;
