@@ -1,7 +1,11 @@
-interface Env {
-  SDA_API: Fetcher; // or `any`
-}
+export async function onRequest(context) {
+  const response = await fetch("https://sda-api.africancontent807.workers.dev/songs.json");
+  const data = await response.json();
 
-export const onRequest: PagesFunction<Env> = async ({ request, env }) => {
-  return env.SDA_API.fetch(request);
-};
+  return new Response(JSON.stringify(data), {
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*"
+    }
+  });
+}
