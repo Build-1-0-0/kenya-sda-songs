@@ -16,10 +16,9 @@ interface Env {
   EDITOR_PASSWORD: string;
 }
 
-// Change this to your actual domain
 const ALLOWED_ORIGIN = "https://kenya-sda-songs.pages.dev";
 
-// Helper: add restricted CORS headers
+// Helper to add CORS headers
 function withCors(response: Response): Response {
   const headers = new Headers(response.headers);
   headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
@@ -33,7 +32,7 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    // Handle preflight CORS
+    // Handle CORS preflight
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
@@ -66,7 +65,7 @@ export default {
         : withCors(new Response("Not Found", { status: 404 }));
     }
 
-    // Editor: Add song
+    // Add song (Editor only)
     if (url.pathname === "/api/songs" && request.method === "POST") {
       if (request.headers.get("X-Editor-Pass") !== env.EDITOR_PASSWORD) {
         return withCors(new Response("Unauthorized", { status: 401 }));
