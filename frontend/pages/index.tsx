@@ -19,19 +19,20 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/api/songs')
-      .then(res => {
+    const fetchSongs = async () => {
+      try {
+        const res = await fetch('/api/songs');
         if (!res.ok) throw new Error('Failed to fetch songs');
-        return res.json();
-      })
-      .then((data: Song[]) => {
+        const data: Song[] = await res.json(); // 👈 Type assertion here
         setSongs(data);
-        setLoading(false);
-      })
-      .catch(err => {
+      } catch (err: any) {
         setError(err.message);
+      } finally {
         setLoading(false);
-      });
+      }
+    };
+
+    fetchSongs();
   }, []);
 
   if (loading) return <div className="container mx-auto p-4">Loading songs...</div>;
