@@ -1,10 +1,7 @@
 'use client';
-import { useState } from 'react';
-import Link from 'next/link';
-import dynamic from 'next/dynamic';
-
-// Lazy-load YouTube player (client-side only)
-const YouTube = dynamic(() => import('react-youtube'), { ssr: false });
+import { useState, useMemo } from 'react';
+import Fuse from 'fuse.js';
+import SongCard from './SongCard';
 
 interface Song {
   id: string;
@@ -17,63 +14,57 @@ interface Song {
   date: string;
 }
 
-interface SongCardProps {
-  song: Song;
+interface SearchBarProps {
+  songs: Song[];
 }
 
-export default function SongCard({ song }: SongCardProps) {
-  const [showVideo, setShowVideo] = useState(false);
+export default function SearchBar({ songs }: SearchBarProps) {
+  const [query, setQuery] = useState('');
+
+  // Memoize Fuse instance to prevent recreation on every keystroke
+  const fuse = useMemo(
+    () =>
+      new Fuse(songs, {
+        keys: ['title', 'description', 'lyrics', 'category'],
+        threshold: 0.3, // 🔍 Lower = more exact matches
+      }),
+    [songs]
+  );
+
+  const results = query ? fuse.search(query).map(r => r.item) : songs;
 
   return (
-    <div className="border rounded-lg overflow-hidden bg-white shadow-md hover:shadow-xl transition-shadow">
-      <div className="relative aspect-video cursor-pointer" onClick={() => setShowVideo(true)}>
-        {!showVideo ? (
-          <>
-            {/* Thumbnail preview */}
-            <img
-              src={song.thumbnail}
-              alt={song.title}
-              className="w-full h-full object-cover"
-              loading="lazy"
-            />
-            {/* Play button overlay */}
-            <div className="absolute inset-0 flex items-center justify-center bg-black/40 hover:bg-black/60 transition-colors">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="white"
-                viewBox="0 0 24 24"
-                width="64"
-                height="64"
-                className="opacity-80"
-              >
-                <path d="M8 5v14l11-7z" />
-              </svg>
-            </div>
-          </>
-        ) : (
-          // Show video player once clicked
-          <YouTube
-            videoId={song.youtubeId}
-            opts={{
-              width: '100%',
-              height: '100%',
-              playerVars: { autoplay: 1, rel: 0 },
-            }}
-            className="w-full h-full"
-          />
+    <div className="container mx-auto p-4">
+      {/* Search Input */}
+      <div className="relative mb-6">
+        <input
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search SDA songs by title, lyrics, or category..."
+          className="border border-gray-300 rounded-lg p-3 w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+        />
+        {query && (
+          <button
+            onClick={() => setQuery('')}
+            className="absolute right-3 top-2.5 text-gray-400 hover:text-gray-600"
+            aria-label="Clear search"
+          >
+            ✕
+          </button>
         )}
       </div>
 
-      {/* Song info */}
-      <div className="p-4">
-        <Link href={`/lyrics/${song.id}`} className="block">
-          <h3 className="text-lg font-semibold mb-2 line-clamp-2">{song.title}</h3>
-        </Link>
-        <p className="text-sm text-gray-600 mb-2 line-clamp-2">{song.description}</p>
-        <p className="text-xs text-gray-400">
-          Category: {song.category} | {song.date}
-        </p>
-      </div>
+      {/* Results */}
+      {results.length === 0 ? (
+        <p className="text-center text-gray-500">No songs found matching “{query}”.</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {results.map(song => (
+            <SongCard key={song.id} song={song} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
