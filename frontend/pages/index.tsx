@@ -13,45 +13,41 @@ interface Song {
   date: string;
 }
 
+const API_URL =
+  process.env.NODE_ENV === 'production'
+    ? 'https://sda-api.africancontent807.workers.dev/api/songs'
+    : '/api/songs'; // For local dev proxy or same-origin testing
+
 export default function Home() {
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchSongs = async () => {
-      try {
-        const res = await fetch('https://sda-api.africancontent807.workers.dev/api/songs', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!res.ok) {
-          throw new Error(`Failed to fetch songs: ${res.status} ${res.statusText}`);
-        }
-
-        const data: Song[] = await res.json();
-        setSongs(data);
-      } catch (err: any) {
-        console.error('Fetch error:', err);
-        setError(err.message || 'Unknown error');
-      } finally {
-        setLoading(false);
+  const fetchSongs = async (retries = 2): Promise<void> => {
+    try {
+      const res = await fetch(API_URL, { headers: { 'Content-Type': 'application/json' } });
+      if (!res.ok) throw new Error(`Failed to fetch songs: ${res.status} ${res.statusText}`);
+      const data: Song[] = await res.json();
+      setSongs(data);
+    } catch (err: any) {
+      if (retries > 0) {
+        console.warn('Retrying fetch...', retries);
+        await new Promise((r) => setTimeout(r, 1000));
+        return fetchSongs(retries - 1);
       }
-    };
+      console.error('Fetch error:', err);
+      setError(err.message || 'Unknown error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchSongs();
   }, []);
 
-  if (loading)
-    return <div className="container mx-auto p-4">Loading songs...</div>;
-
-  if (error)
-    return <div className="container mx-auto p-4 text-red-500">
-      Error: {error}
-    </div>;
+  if (loading) return <div className="container mx-auto p-4">Loading songs...</div>;
+  if (error) return <div className="container mx-auto p-4 text-red-500">Error: {error}</div>;
 
   return (
     <div className="container mx-auto p-4">
@@ -64,7 +60,7 @@ export default function Home() {
         </p>
       ) : (
         <div className="grid grid-cols-2 gap-4">
-          {songs.map(song => (
+          {songs.map((song) => (
             <SongCard key={song.id} song={song} />
           ))}
         </div>
