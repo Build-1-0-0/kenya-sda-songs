@@ -16,12 +16,16 @@ interface Env {
   EDITOR_PASSWORD: string;
 }
 
-// Helper: add CORS headers
+// Change this to your actual domain
+const ALLOWED_ORIGIN = "https://kenya-sda-songs.pages.dev";
+
+// Helper: add restricted CORS headers
 function withCors(response: Response): Response {
   const headers = new Headers(response.headers);
-  headers.set("Access-Control-Allow-Origin", "*");
+  headers.set("Access-Control-Allow-Origin", ALLOWED_ORIGIN);
   headers.set("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
   headers.set("Access-Control-Allow-Headers", "Content-Type, X-Editor-Pass");
+  headers.set("Vary", "Origin");
   return new Response(response.body, { ...response, headers });
 }
 
@@ -29,13 +33,14 @@ export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
 
-    // Handle preflight (OPTIONS) requests
+    // Handle preflight CORS
     if (request.method === "OPTIONS") {
       return new Response(null, {
         headers: {
-          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Origin": ALLOWED_ORIGIN,
           "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type, X-Editor-Pass",
+          "Vary": "Origin",
         },
       });
     }
@@ -71,7 +76,6 @@ export default {
       return withCors(Response.json({ success: true }));
     }
 
-    // Fallback
     return withCors(new Response("Not Found", { status: 404 }));
   },
 } satisfies ExportedHandler<Env>;
