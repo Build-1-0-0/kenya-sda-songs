@@ -1,3 +1,4 @@
+import Link from 'next/link'; // 👈 Add for navigation
 import YouTube from 'react-youtube';
 
 interface Song {
@@ -17,11 +18,14 @@ interface SongCardProps {
 
 export default function SongCard({ song }: SongCardProps) {
   return (
-    <div className="border rounded-lg p-4">
-      <img src={song.thumbnail} alt={song.title} className="w-full h-32 object-cover rounded" />
-      <h3 className="text-lg font-semibold">{song.title}</h3>
-      <p className="text-sm">{song.description.slice(0, 50)}...</p>
-      <YouTube videoId={song.youtubeId} opts={{ width: '100%', height: '150' }} />
-    </div>
+    <Link href={`/lyrics/${song.id}`} className="block hover:shadow-lg transition-shadow">
+      <div className="border rounded-lg p-4 bg-white shadow-md hover:shadow-xl">
+        <img src={song.thumbnail} alt={song.title} className="w-full h-48 object-cover rounded-lg mb-2" />
+        <h3 className="text-lg font-semibold mb-2 line-clamp-2">{song.title}</h3>
+        <p className="text-sm text-gray-600 mb-2 line-clamp-2">{song.description}</p>
+        <p className="text-xs text-gray-400 mb-2">Category: {song.category} | {song.date}</p>
+        <YouTube videoId={song.youtubeId} opts={{ width: '100%', height: '200', playerVars: { rel: 0 } }} />
+      </div>
+    </Link>
   );
 }
